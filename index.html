@@ -18,10 +18,22 @@
             background-position: center;
             background-attachment: fixed;
             color: #F9FAFB;
+            /* Added to accommodate fixed header */
+            padding-top: 280px; 
         }
         h1, h3 {
             font-family: 'Orbitron', sans-serif;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+        }
+        /* MODIFIED: Header is now fixed */
+        #main-header-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            width: 100%;
+            max-width: 1200px;
         }
         .bracket-container {
             position: relative;
@@ -34,18 +46,27 @@
             display: flex;
             flex-direction: row;
             align-items: center;
+            margin: 0 auto; /* Center the bracket within the scroll container */
+        }
+        /* NEW: Symmetrical sides */
+        .bracket-side {
+            display: flex;
+            align-items: center;
+        }
+        .bracket-side-right {
+            flex-direction: row-reverse;
         }
         .round {
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            flex-grow: 0; /* Changed for symmetry */
-            flex-shrink: 0; /* Changed for symmetry */
-            width: 300px; /* Changed for symmetry */
+            flex-grow: 0;
+            flex-shrink: 0;
+            width: 300px;
             padding: 0 2rem;
         }
         .round-final { 
-            width: 350px; /* Changed for symmetry */
+            width: 350px;
         }
         .match {
             background-color: rgba(31, 41, 55, 0.85);
@@ -119,7 +140,6 @@
             object-fit: contain;
             filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
         }
-        /* MODIFIED: Header Logo Sizes */
         #nestle-logo-header { height: 100px; }
         #andromeda-logo-header { height: 150px; }
 
@@ -150,7 +170,6 @@
             transition: all 0.5s ease-in-out;
         }
         
-        /* MODIFIED: Watermark Styles */
         .watermark-container {
             position: fixed;
             top: 0;
@@ -163,16 +182,15 @@
             gap: 10vw;
             z-index: -1;
             pointer-events: none;
-            opacity: 0.1; /* Increased Opacity */
+            opacity: 0.1;
         }
         .watermark-container img {
             object-fit: contain;
             max-width: 50vw;
         }
-        #andromeda-watermark { height: 75vh; } /* Increased Size */
-        #nestle-watermark { height: 50vh; } /* Increased Size */
+        #andromeda-watermark { height: 75vh; }
+        #nestle-watermark { height: 50vh; }
 
-        /* NEW: Champion Announcement Styles */
         #champion-overlay {
             position: fixed;
             top: 0;
@@ -215,8 +233,8 @@
             to { text-shadow: 0 0 20px #fff, 0 0 30px #ffc700, 0 0 40px #ffc700, 0 0 50px #ffc700, 0 0 60px #ffc700, 0 0 70px #ffc700, 0 0 80px #ffc700; }
         }
 
-        /* 2K Screen Optimizations */
         @media (min-width: 2560px) {
+            body { padding-top: 320px; }
             .round { width: 380px; padding: 0 3rem; }
             .round-final { width: 450px; }
             .match { margin: 3.5rem 0; }
@@ -233,80 +251,83 @@
     <canvas id="fireworks-canvas"></canvas>
     <div id="backdrop"></div>
 
-    <!-- NEW: Watermarks -->
     <div class="watermark-container">
         <img id="andromeda-watermark" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png" alt="Andromeda Ventures Watermark">
         <img id="nestle-watermark" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png" alt="Nestlé Watermark">
     </div>
 
-    <!-- NEW: Champion Screen -->
     <div id="champion-overlay" onclick="this.classList.remove('visible')">
         <p class="champion-title">¡CAMPEÓN!</p>
         <h2 id="champion-name-display" class="champion-name"></h2>
     </div>
 
-    <header class="text-center mb-8">
-        <div class="logo-container">
-             <img id="andromeda-logo-header" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png" alt="Andromeda Ventures Logo" onerror="this.onerror=null;this.src='https://placehold.co/225x150/0f293b/FFFFFF?text=Andromeda';">
-             <span class="vs">VS</span>
-             <img id="nestle-logo-header" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png" alt="Nestlé Logo" onerror="this.onerror=null;this.src='https://placehold.co/150x100/0f293b/FFFFFF?text=Nestlé';">
+    <!-- MODIFIED: Header and buttons are now fixed at the top -->
+    <div id="main-header-container">
+        <header class="text-center">
+            <div class="logo-container">
+                 <img id="andromeda-logo-header" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png" alt="Andromeda Ventures Logo" onerror="this.onerror=null;this.src='https://placehold.co/225x150/0f293b/FFFFFF?text=Andromeda';">
+                 <span class="vs">VS</span>
+                 <img id="nestle-logo-header" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png" alt="Nestlé Logo" onerror="this.onerror=null;this.src='https://placehold.co/150x100/0f293b/FFFFFF?text=Nestlé';">
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-black tracking-wider uppercase mt-6">Torneo de Ping Pong</h1>
+        </header>
+        <div class="text-center mt-6 mb-4 flex justify-center gap-4">
+            <button id="reset-tournament-btn" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105">Reiniciar Torneo</button>
+            <button id="clear-data-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105">Borrar Datos Guardados</button>
         </div>
-        <h1 class="text-4xl sm:text-6xl font-black tracking-wider uppercase mt-6">Torneo de Ping Pong</h1>
-    </header>
-
-    <div class="text-center mb-8 flex justify-center gap-4">
-        <button id="reset-tournament-btn" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105">Reiniciar Torneo</button>
-        <button id="clear-data-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105">Borrar Datos Guardados</button>
     </div>
 
     <div class="bracket-container" id="bracket-container">
         <svg id="connector-svg"></svg>
         <div class="bracket" id="bracket">
-            <!-- The rest of the HTML for the bracket remains the same -->
-            <!-- Ronda 1 (Izquierda) -->
-            <div class="round">
-                <div class="match" data-match-id="1" data-next-match="9" data-next-player-slot="1" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Alejandra G. - Ricardo P.</span><div class="score-controls"><button onclick="changeScore(1, 1, -1)">-</button><span class="player-score" id="score-1-1">0</span><button onclick="changeScore(1, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Justin J. - Kender P.</span><div class="score-controls"><button onclick="changeScore(1, 2, -1)">-</button><span class="player-score" id="score-1-2">0</span><button onclick="changeScore(1, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(1, event)" disabled>Declarar Ganador</button>
+            <!-- MODIFIED: Symmetrical Structure -->
+            <div class="bracket-side bracket-side-left">
+                <!-- Ronda 1 (Izquierda) -->
+                <div class="round">
+                    <div class="match" data-match-id="1" data-next-match="9" data-next-player-slot="1" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Alejandra G. - Ricardo P.</span><div class="score-controls"><button onclick="changeScore(1, 1, -1)">-</button><span class="player-score" id="score-1-1">0</span><button onclick="changeScore(1, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Justin J. - Kender P.</span><div class="score-controls"><button onclick="changeScore(1, 2, -1)">-</button><span class="player-score" id="score-1-2">0</span><button onclick="changeScore(1, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(1, event)" disabled>Declarar Ganador</button>
+                    </div>
+                    <div class="match" data-match-id="2" data-next-match="9" data-next-player-slot="2" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Cecilia B. - Valeria O.</span><div class="score-controls"><button onclick="changeScore(2, 1, -1)">-</button><span class="player-score" id="score-2-1">0</span><button onclick="changeScore(2, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Feliciano G. - Pedro C.</span><div class="score-controls"><button onclick="changeScore(2, 2, -1)">-</button><span class="player-score" id="score-2-2">0</span><button onclick="changeScore(2, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(2, event)" disabled>Declarar Ganador</button>
+                    </div>
+                    <div class="match" data-match-id="3" data-next-match="10" data-next-player-slot="1" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Gisanny M. - Mariam M.</span><div class="score-controls"><button onclick="changeScore(3, 1, -1)">-</button><span class="player-score" id="score-3-1">0</span><button onclick="changeScore(3, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Vanesa C. - Iván L.</span><div class="score-controls"><button onclick="changeScore(3, 2, -1)">-</button><span class="player-score" id="score-3-2">0</span><button onclick="changeScore(3, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(3, event)" disabled>Declarar Ganador</button>
+                    </div>
+                    <div class="match" data-match-id="4" data-next-match="10" data-next-player-slot="2" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Andrés D. - Vicente O.</span><div class="score-controls"><button onclick="changeScore(4, 1, -1)">-</button><span class="player-score" id="score-4-1">0</span><button onclick="changeScore(4, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Lui H. - Jesús G.</span><div class="score-controls"><button onclick="changeScore(4, 2, -1)">-</button><span class="player-score" id="score-4-2">0</span><button onclick="changeScore(4, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(4, event)" disabled>Declarar Ganador</button>
+                    </div>
                 </div>
-                <div class="match" data-match-id="2" data-next-match="9" data-next-player-slot="2" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Cecilia B. - Valeria O.</span><div class="score-controls"><button onclick="changeScore(2, 1, -1)">-</button><span class="player-score" id="score-2-1">0</span><button onclick="changeScore(2, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Feliciano G. - Pedro C.</span><div class="score-controls"><button onclick="changeScore(2, 2, -1)">-</button><span class="player-score" id="score-2-2">0</span><button onclick="changeScore(2, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(2, event)" disabled>Declarar Ganador</button>
+                <!-- Cuartos de Final (Izquierda) -->
+                <div class="round">
+                    <div class="match" data-match-id="9" data-next-match="13" data-next-player-slot="1" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M1</span><div class="score-controls"><button onclick="changeScore(9, 1, -1)">-</button><span class="player-score" id="score-9-1">0</span><button onclick="changeScore(9, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M2</span><div class="score-controls"><button onclick="changeScore(9, 2, -1)">-</button><span class="player-score" id="score-9-2">0</span><button onclick="changeScore(9, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(9, event)" disabled>Declarar Ganador</button>
+                    </div>
+                    <div class="match" data-match-id="10" data-next-match="13" data-next-player-slot="2" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M3</span><div class="score-controls"><button onclick="changeScore(10, 1, -1)">-</button><span class="player-score" id="score-10-1">0</span><button onclick="changeScore(10, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M4</span><div class="score-controls"><button onclick="changeScore(10, 2, -1)">-</button><span class="player-score" id="score-10-2">0</span><button onclick="changeScore(10, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(10, event)" disabled>Declarar Ganador</button>
+                    </div>
                 </div>
-                <div class="match" data-match-id="3" data-next-match="10" data-next-player-slot="1" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Gisanny M. - Mariam M.</span><div class="score-controls"><button onclick="changeScore(3, 1, -1)">-</button><span class="player-score" id="score-3-1">0</span><button onclick="changeScore(3, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Vanesa C. - Iván L.</span><div class="score-controls"><button onclick="changeScore(3, 2, -1)">-</button><span class="player-score" id="score-3-2">0</span><button onclick="changeScore(3, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(3, event)" disabled>Declarar Ganador</button>
-                </div>
-                <div class="match" data-match-id="4" data-next-match="10" data-next-player-slot="2" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Andrés D. - Vicente O.</span><div class="score-controls"><button onclick="changeScore(4, 1, -1)">-</button><span class="player-score" id="score-4-1">0</span><button onclick="changeScore(4, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Lui H. - Jesús G.</span><div class="score-controls"><button onclick="changeScore(4, 2, -1)">-</button><span class="player-score" id="score-4-2">0</span><button onclick="changeScore(4, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(4, event)" disabled>Declarar Ganador</button>
+                <!-- Semifinal (Izquierda) -->
+                <div class="round">
+                    <div class="match" data-match-id="13" data-next-match="15" data-next-player-slot="1" data-loser-to="16" data-loser-slot="1" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador QF1</span><div class="score-controls"><button onclick="changeScore(13, 1, -1)">-</button><span class="player-score" id="score-13-1">0</span><button onclick="changeScore(13, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador QF2</span><div class="score-controls"><button onclick="changeScore(13, 2, -1)">-</button><span class="player-score" id="score-13-2">0</span><button onclick="changeScore(13, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(13, event)" disabled>Declarar Ganador</button>
+                    </div>
                 </div>
             </div>
-            <!-- Cuartos de Final (Izquierda) -->
-            <div class="round">
-                <div class="match" data-match-id="9" data-next-match="13" data-next-player-slot="1" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M1</span><div class="score-controls"><button onclick="changeScore(9, 1, -1)">-</button><span class="player-score" id="score-9-1">0</span><button onclick="changeScore(9, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M2</span><div class="score-controls"><button onclick="changeScore(9, 2, -1)">-</button><span class="player-score" id="score-9-2">0</span><button onclick="changeScore(9, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(9, event)" disabled>Declarar Ganador</button>
-                </div>
-                <div class="match" data-match-id="10" data-next-match="13" data-next-player-slot="2" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M3</span><div class="score-controls"><button onclick="changeScore(10, 1, -1)">-</button><span class="player-score" id="score-10-1">0</span><button onclick="changeScore(10, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M4</span><div class="score-controls"><button onclick="changeScore(10, 2, -1)">-</button><span class="player-score" id="score-10-2">0</span><button onclick="changeScore(10, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(10, event)" disabled>Declarar Ganador</button>
-                </div>
-            </div>
-            <!-- Semifinal (Izquierda) -->
-            <div class="round">
-                <div class="match" data-match-id="13" data-next-match="15" data-next-player-slot="1" data-loser-to="16" data-loser-slot="1" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador QF1</span><div class="score-controls"><button onclick="changeScore(13, 1, -1)">-</button><span class="player-score" id="score-13-1">0</span><button onclick="changeScore(13, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador QF2</span><div class="score-controls"><button onclick="changeScore(13, 2, -1)">-</button><span class="player-score" id="score-13-2">0</span><button onclick="changeScore(13, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(13, event)" disabled>Declarar Ganador</button>
-                </div>
-            </div>
+
             <!-- Final y 3er Lugar -->
             <div class="round round-final">
                 <div class="match" data-match-id="15" onclick="focusMatch(event)">
@@ -322,48 +343,51 @@
                     <button class="winner-button" onclick="declareWinner(16, event)" disabled>Declarar 3er Lugar</button>
                 </div>
             </div>
-            <!-- Semifinal (Derecha) -->
-            <div class="round">
-                <div class="match" data-match-id="14" data-next-match="15" data-next-player-slot="2" data-loser-to="16" data-loser-slot="2" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador QF3</span><div class="score-controls"><button onclick="changeScore(14, 1, -1)">-</button><span class="player-score" id="score-14-1">0</span><button onclick="changeScore(14, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador QF4</span><div class="score-controls"><button onclick="changeScore(14, 2, -1)">-</button><span class="player-score" id="score-14-2">0</span><button onclick="changeScore(14, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(14, event)" disabled>Declarar Ganador</button>
+            
+            <div class="bracket-side bracket-side-right">
+                <!-- Semifinal (Derecha) -->
+                <div class="round">
+                    <div class="match" data-match-id="14" data-next-match="15" data-next-player-slot="2" data-loser-to="16" data-loser-slot="2" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador QF3</span><div class="score-controls"><button onclick="changeScore(14, 1, -1)">-</button><span class="player-score" id="score-14-1">0</span><button onclick="changeScore(14, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador QF4</span><div class="score-controls"><button onclick="changeScore(14, 2, -1)">-</button><span class="player-score" id="score-14-2">0</span><button onclick="changeScore(14, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(14, event)" disabled>Declarar Ganador</button>
+                    </div>
                 </div>
-            </div>
-            <!-- Cuartos de Final (Derecha) -->
-            <div class="round">
-                <div class="match" data-match-id="11" data-next-match="14" data-next-player-slot="1" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M5</span><div class="score-controls"><button onclick="changeScore(11, 1, -1)">-</button><span class="player-score" id="score-11-1">0</span><button onclick="changeScore(11, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M6</span><div class="score-controls"><button onclick="changeScore(11, 2, -1)">-</button><span class="player-score" id="score-11-2">0</span><button onclick="changeScore(11, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(11, event)" disabled>Declarar Ganador</button>
+                <!-- Cuartos de Final (Derecha) -->
+                <div class="round">
+                    <div class="match" data-match-id="11" data-next-match="14" data-next-player-slot="1" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M5</span><div class="score-controls"><button onclick="changeScore(11, 1, -1)">-</button><span class="player-score" id="score-11-1">0</span><button onclick="changeScore(11, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M6</span><div class="score-controls"><button onclick="changeScore(11, 2, -1)">-</button><span class="player-score" id="score-11-2">0</span><button onclick="changeScore(11, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(11, event)" disabled>Declarar Ganador</button>
+                    </div>
+                    <div class="match" data-match-id="12" data-next-match="14" data-next-player-slot="2" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M7</span><div class="score-controls"><button onclick="changeScore(12, 1, -1)">-</button><span class="player-score" id="score-12-1">0</span><button onclick="changeScore(12, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M8</span><div class="score-controls"><button onclick="changeScore(12, 2, -1)">-</button><span class="player-score" id="score-12-2">0</span><button onclick="changeScore(12, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(12, event)" disabled>Declarar Ganador</button>
+                    </div>
                 </div>
-                <div class="match" data-match-id="12" data-next-match="14" data-next-player-slot="2" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M7</span><div class="score-controls"><button onclick="changeScore(12, 1, -1)">-</button><span class="player-score" id="score-12-1">0</span><button onclick="changeScore(12, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M8</span><div class="score-controls"><button onclick="changeScore(12, 2, -1)">-</button><span class="player-score" id="score-12-2">0</span><button onclick="changeScore(12, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(12, event)" disabled>Declarar Ganador</button>
-                </div>
-            </div>
-            <!-- Ronda 1 (Derecha) -->
-            <div class="round">
-                <div class="match" data-match-id="5" data-next-match="11" data-next-player-slot="1" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Angel B. - Samuel D.</span><div class="score-controls"><button onclick="changeScore(5, 1, -1)">-</button><span class="player-score" id="score-5-1">0</span><button onclick="changeScore(5, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Alexis R. - Arturo B.</span><div class="score-controls"><button onclick="changeScore(5, 2, -1)">-</button><span class="player-score" id="score-5-2">0</span><button onclick="changeScore(5, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(5, event)" disabled>Declarar Ganador</button>
-                </div>
-                <div class="match" data-match-id="6" data-next-match="11" data-next-player-slot="2" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Verónica S. - Enrique J.</span><div class="score-controls"><button onclick="changeScore(6, 1, -1)">-</button><span class="player-score" id="score-6-1">0</span><button onclick="changeScore(6, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ruben L. - Ricardo F.</span><div class="score-controls"><button onclick="changeScore(6, 2, -1)">-</button><span class="player-score" id="score-6-2">0</span><button onclick="changeScore(6, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(6, event)" disabled>Declarar Ganador</button>
-                </div>
-                <div class="match" data-match-id="7" data-next-match="12" data-next-player-slot="1" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Katiuska R. - Miguel P.</span><div class="score-controls"><button onclick="changeScore(7, 1, -1)">-</button><span class="player-score" id="score-7-1">0</span><button onclick="changeScore(7, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Alejandro M. - Ricardo C.</span><div class="score-controls"><button onclick="changeScore(7, 2, -1)">-</button><span class="player-score" id="score-7-2">0</span><button onclick="changeScore(7, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(7, event)" disabled>Declarar Ganador</button>
-                </div>
-                <div class="match" data-match-id="8" data-next-match="12" data-next-player-slot="2" onclick="focusMatch(event)">
-                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Isabella R. - Anthony M.</span><div class="score-controls"><button onclick="changeScore(8, 1, -1)">-</button><span class="player-score" id="score-8-1">0</span><button onclick="changeScore(8, 1, 1)">+</button></div></div>
-                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Gabriel C. - José P.</span><div class="score-controls"><button onclick="changeScore(8, 2, -1)">-</button><span class="player-score" id="score-8-2">0</span><button onclick="changeScore(8, 2, 1)">+</button></div></div>
-                    <button class="winner-button" onclick="declareWinner(8, event)" disabled>Declarar Ganador</button>
+                <!-- Ronda 1 (Derecha) -->
+                <div class="round">
+                    <div class="match" data-match-id="5" data-next-match="11" data-next-player-slot="1" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Angel B. - Samuel D.</span><div class="score-controls"><button onclick="changeScore(5, 1, -1)">-</button><span class="player-score" id="score-5-1">0</span><button onclick="changeScore(5, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Alexis R. - Arturo B.</span><div class="score-controls"><button onclick="changeScore(5, 2, -1)">-</button><span class="player-score" id="score-5-2">0</span><button onclick="changeScore(5, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(5, event)" disabled>Declarar Ganador</button>
+                    </div>
+                    <div class="match" data-match-id="6" data-next-match="11" data-next-player-slot="2" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Verónica S. - Enrique J.</span><div class="score-controls"><button onclick="changeScore(6, 1, -1)">-</button><span class="player-score" id="score-6-1">0</span><button onclick="changeScore(6, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ruben L. - Ricardo F.</span><div class="score-controls"><button onclick="changeScore(6, 2, -1)">-</button><span class="player-score" id="score-6-2">0</span><button onclick="changeScore(6, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(6, event)" disabled>Declarar Ganador</button>
+                    </div>
+                    <div class="match" data-match-id="7" data-next-match="12" data-next-player-slot="1" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Katiuska R. - Miguel P.</span><div class="score-controls"><button onclick="changeScore(7, 1, -1)">-</button><span class="player-score" id="score-7-1">0</span><button onclick="changeScore(7, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Alejandro M. - Ricardo C.</span><div class="score-controls"><button onclick="changeScore(7, 2, -1)">-</button><span class="player-score" id="score-7-2">0</span><button onclick="changeScore(7, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(7, event)" disabled>Declarar Ganador</button>
+                    </div>
+                    <div class="match" data-match-id="8" data-next-match="12" data-next-player-slot="2" onclick="focusMatch(event)">
+                        <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Isabella R. - Anthony M.</span><div class="score-controls"><button onclick="changeScore(8, 1, -1)">-</button><span class="player-score" id="score-8-1">0</span><button onclick="changeScore(8, 1, 1)">+</button></div></div>
+                        <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Gabriel C. - José P.</span><div class="score-controls"><button onclick="changeScore(8, 2, -1)">-</button><span class="player-score" id="score-8-2">0</span><button onclick="changeScore(8, 2, 1)">+</button></div></div>
+                        <button class="winner-button" onclick="declareWinner(8, event)" disabled>Declarar Ganador</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -601,7 +625,7 @@
         
         class Particle {
             constructor(x, y, color, isBig) {
-                this.x = x; this.y = y; this.color = color; this.isBig = isBig; // FIX: Store isBig property
+                this.x = x; this.y = y; this.color = color; this.isBig = isBig;
                 this.size = Math.random() * (this.isBig ? 3 : 2) + 1; this.alpha = 1;
                 this.angle = Math.random() * Math.PI * 2;
                 this.speed = Math.random() * (this.isBig ? 8 : 5) + 1; this.gravity = 0.1;
@@ -611,7 +635,7 @@
             update() {
                 this.x += this.vx; this.y += this.vy;
                 this.vy += this.gravity;
-                this.alpha -= this.isBig ? 0.015 : 0.02; // FIX: Use this.isBig
+                this.alpha -= this.isBig ? 0.015 : 0.02;
             }
             draw() {
                 ctx.globalAlpha = this.alpha; ctx.fillStyle = this.color;
@@ -665,17 +689,27 @@
 
                 const startRect = match.getBoundingClientRect();
                 const endRect = nextMatch.getBoundingClientRect();
-
-                const startX = startRect.right - containerRect.left + bracketContainer.scrollLeft;
-                const startY = startRect.top + startRect.height / 2 - containerRect.top;
                 
-                const endX = endRect.left - containerRect.left + bracketContainer.scrollLeft;
-                const endY = endRect.top + endRect.height / 2 - containerRect.top;
+                const isRightSide = match.closest('.bracket-side-right');
+
+                const startY = startRect.top + startRect.height / 2 - containerRect.top + bracketContainer.scrollTop;
+                const endY = endRect.top + endRect.height / 2 - containerRect.top + bracketContainer.scrollTop;
+                
+                let startX, endX, midX, d;
+
+                if (isRightSide) {
+                    startX = startRect.left - containerRect.left + bracketContainer.scrollLeft;
+                    endX = endRect.right - containerRect.left + bracketContainer.scrollLeft;
+                    midX = startX - 40;
+                    d = `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`;
+                } else {
+                    startX = startRect.right - containerRect.left + bracketContainer.scrollLeft;
+                    endX = endRect.left - containerRect.left + bracketContainer.scrollLeft;
+                    midX = startX + 40;
+                    d = `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`;
+                }
 
                 const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                const midX = startX + 40;
-                const d = `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`;
-                
                 path.setAttribute('d', d);
                 path.setAttribute('stroke', '#6b7280');
                 path.setAttribute('stroke-width', '2');

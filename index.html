@@ -1,103 +1,53 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- ============== CONFIGURACIÓN GENERAL Y METADATOS ============== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marcador Torneo de Ping Pong</title>
-    
-    <!-- ============== RECURSOS EXTERNOS (Frameworks y Fuentes) ============== -->
+    <title>Marcador Torneo de Ping Pong - Andromeda vs. Nestlé</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- ============== ESTILOS CSS PERSONALIZADOS ============== -->
     <style>
-        /* --- Estilos Generales del Cuerpo de la Página --- */
         body {
             font-family: 'Roboto', sans-serif;
-            background-image: linear-gradient(rgba(15, 41, 59, 0.9), rgba(13, 79, 78, 0.9)), url('https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/photo-1511067007398-7e4b90cfa4bc.avif');
+            background-image: linear-gradient(rgba(15, 41, 59, 0.95), rgba(13, 79, 78, 0.95)), url('https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/photo-1511067007398-7e4b90cfa4bc.avif');
             background-color: #0f293b;
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             color: #F9FAFB;
         }
-        /* --- Estilos para Títulos (H1, H3) --- */
         h1, h3 {
             font-family: 'Orbitron', sans-serif;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
         }
-
-        /* --- Contenedor Principal del Bracket --- */
         .bracket-container {
             position: relative;
             display: flex;
-            justify-content: center;
+            justify-content: flex-start; /* Changed for scroll centering */
             padding: 2rem;
-            overflow: hidden; /* Oculta el desbordamiento de las marcas de agua */
-            transition: opacity 0.5s ease-out;
+            overflow-x: auto;
         }
-
-        /* --- Marcas de Agua de Logos en el Fondo --- */
-        .bracket-container::before, .bracket-container::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            background-size: contain;
-            background-repeat: no-repeat;
-            opacity: 0.05;
-            z-index: 0;
-            transform: translateY(-50%);
-        }
-        .bracket-container::before { /* Marca de Agua Andromeda */
-            background-image: url('https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png');
-            left: 5%;
-            background-position: left center;
-            width: 60%; 
-            height: 100%;
-        }
-        .bracket-container::after { /* Marca de Agua Nestlé */
-            background-image: url('https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png');
-            right: 5%;
-            background-position: right center;
-            width: 40%;
-            height: 80%;
-        }
-
-        /* --- Estructura del Bracket (Llaves) --- */
         .bracket {
             display: flex;
             flex-direction: row;
             align-items: center;
-            position: relative;
-            z-index: 1;
         }
-        .bracket-wing { /* Contenedor para las alas izquierda y derecha */
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
-        .bracket-wing.right { /* Invierte el orden para el ala derecha */
-            flex-direction: row-reverse;
-        }
-        .round { /* Columna para cada ronda de partidos */
+        .round {
             display: flex;
             flex-direction: column;
             justify-content: space-around;
             flex-grow: 1;
-            min-width: 260px;
-            padding: 0 2.5rem;
+            min-width: 300px;
+            padding: 0 2rem;
         }
-        .round-final { min-width: 340px; }
-
-        /* --- Estilos de cada Partido (Match) --- */
+        .round-final { min-width: 350px; }
         .match {
             background-color: rgba(31, 41, 55, 0.85);
             border-radius: 0.75rem;
-            margin: 3rem 0;
+            margin: 2.5rem 0;
             padding: 1rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
             position: relative;
@@ -108,38 +58,36 @@
             width: 100%;
         }
         .match-completed { border-color: #4b5563; }
-
-        /* --- Modo de Enfoque (Partido Agrandado) --- */
         .match.is-focus-mode {
             position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(2.5);
+            transform: translate(-50%, -50%) scale(1.5);
             z-index: 100; border-color: #f59e0b;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            cursor: default;
-            width: auto; 
-            min-width: 400px;
-            padding: 1.5rem;
+            cursor: default; width: 90%; max-width: 400px;
         }
-
-        /* --- Estilos de Jugadores y Puntuación --- */
         .player {
             display: flex; justify-content: space-between; align-items: center;
             padding: 0.75rem 0; border-bottom: 1px solid #4b5563;
         }
         .player:last-child { border-bottom: none; }
-        .player-name { 
+        .player-name {
             font-weight: 500; flex-grow: 1; font-size: 1rem;
-            padding: 2px 4px; border-radius: 3px;
+            padding: 2px 4px;
+            border-radius: 3px;
             transition: background-color 0.2s;
         }
-        .player-name:hover { background-color: rgba(255,255,255,0.1); }
-        .player-name[contenteditable="true"] { /* Estilo al editar nombre */
-            background-color: #4b5563; outline: 2px solid #f59e0b; cursor: text;
+        .player-name:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        .player-name[contenteditable="true"] {
+            background-color: #4b5563;
+            outline: 2px solid #f59e0b;
+            cursor: text;
         }
         .winner-highlight { animation: glow 1.5s ease-in-out infinite alternate; }
         @keyframes glow {
-            from { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #00ffc3, 0 0 20px #00ffc3; }
-            to { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #00ffc3, 0 0 40px #00ffc3; }
+            from { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #10b981, 0 0 20px #10b981; }
+            to { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #10b981, 0 0 40px #10b981; }
         }
         .player-score {
             font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700;
@@ -150,248 +98,300 @@
             width: 32px; height: 32px; font-size: 1.2rem; line-height: 1;
             margin-left: 0.5rem; cursor: pointer; transition: all 0.2s ease;
         }
-        .score-controls button:hover { background-color: #6b7280; transform: scale(1.1); }
+        .score-controls button:hover:not(:disabled) { background-color: #6b7280; transform: scale(1.1); }
         .winner-button {
             background: linear-gradient(to right, #10b981, #14b8a6); color: white; border: none;
             padding: 0.75rem 1rem; border-radius: 0.375rem; margin-top: 1rem; cursor: pointer;
             width: 100%; font-weight: 700; font-size: 1rem; text-transform: uppercase;
             transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
-        .winner-button:hover { transform: translateY(-2px); box-shadow: 0 7px 10px rgba(0,0,0,0.2); }
-        .winner-button:disabled { background: #4b5563; cursor: not-allowed; transform: none; box-shadow: none; }
-        
-        /* --- Cabecera: Logos y Título Principal --- */
+        .winner-button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 7px 10px rgba(0,0,0,0.2); }
+        .winner-button:disabled { background: #4b5563; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
         .logo-container {
             display: flex; justify-content: center; align-items: center;
-            gap: 4rem; margin-bottom: 1rem;
+            gap: 2.5rem; margin-bottom: 1rem;
         }
         .logo-container img {
+            height: 60px;
             width: auto;
-            max-width: 300px;
             object-fit: contain;
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+            max-width: 200px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
         }
-        #logo-andromeda {
-            height: 135px;
-        }
-        #logo-nestle {
-            height: 120px;
-        }
-        .main-title {
-            animation: title-enter 1s ease-out forwards, title-pulse 2s ease-in-out 1s infinite alternate;
-        }
-        @keyframes title-enter {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes title-pulse {
-            from { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #14b8a6, 0 0 40px #14b8a6; }
-            to { text-shadow: 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #14b8a6, 0 0 50px #14b8a6; }
-        }
-        .vs { font-family: 'Orbitron', sans-serif; font-size: 4rem; font-weight: 900; color: #d1d5db; text-shadow: 3px 3px 5px rgba(0,0,0,0.5); }
-        
-        /* --- Overlays (Fondo oscuro, Pantalla de Ganador) --- */
-        #backdrop, #winner-overlay {
+        .vs { font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; color: #d1d5db; text-shadow: 3px 3px 5px rgba(0,0,0,0.5); }
+        #backdrop {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: rgba(0, 0, 0, 0.7); z-index: 50; opacity: 0;
             transition: opacity 0.4s ease; pointer-events: none;
         }
-        #backdrop.active, #winner-overlay.active { opacity: 1; pointer-events: auto; }
+        #backdrop.active { opacity: 1; pointer-events: auto; }
         #fireworks-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 200; pointer-events: none;
         }
         #connector-svg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: -1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
         }
-        #winner-overlay {
+        .connector-path.winner-path {
+            stroke: #10b981;
+            stroke-width: 3;
+            filter: drop-shadow(0 0 5px #10b981);
+            transition: all 0.5s ease-in-out;
+        }
+        
+        /* NEW: Watermark Styles */
+        .watermark-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10vw;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.05;
+        }
+        .watermark-container img {
+            object-fit: contain;
+            max-width: 40vw;
+        }
+        #andromeda-watermark { height: 45vh; }
+        #nestle-watermark { height: 30vh; }
+
+        /* NEW: Champion Announcement Styles */
+        #champion-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
             z-index: 300;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-        }
-        #winner-name {
-            font-size: 8vw;
-            font-family: 'Orbitron', sans-serif;
-            animation: glow 1.5s ease-in-out infinite alternate;
-        }
-        #winner-title {
-            font-size: 4vw;
-            color: #f59e0b;
-        }
-
-        /* --- Estilos para el Resumen Final --- */
-        #summary-container {
-            display: none;
             opacity: 0;
-            transition: opacity 0.5s ease-in;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+            cursor: pointer;
         }
-        .summary-match {
-            border: 2px solid #4b5563;
-            opacity: 0.7;
+        #champion-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
         }
-        .summary-match .player-name {
-            font-weight: normal;
+        .champion-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: #d1d5db;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
         }
-        .summary-match .winner {
-            font-weight: bold;
-            color: #10b981;
+        .champion-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 10vw, 8rem);
+            font-weight: 900;
+            text-align: center;
+            padding: 0 2rem;
+            color: #fff;
+            animation: champion-glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes champion-glow {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #f59e0b, 0 0 40px #f59e0b, 0 0 50px #f59e0b, 0 0 60px #f59e0b, 0 0 70px #f59e0b; }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px #ffc700, 0 0 40px #ffc700, 0 0 50px #ffc700, 0 0 60px #ffc700, 0 0 70px #ffc700, 0 0 80px #ffc700; }
         }
 
-        /* --- Diseño Responsivo para Pantallas más Pequeñas --- */
-        @media (max-width: 1600px) {
-            .bracket {
-                flex-direction: column;
-            }
+        /* 2K Screen Optimizations */
+        @media (min-width: 2560px) {
+            .round { min-width: 380px; padding: 0 3rem; }
+            .match { margin: 3.5rem 0; }
+            h1 { font-size: 5rem; }
+            .player-name { font-size: 1.2rem; }
+            .player-score { font-size: 2rem; }
         }
     </style>
 </head>
 <body class="p-4 sm:p-8">
 
-    <!-- ============== ELEMENTOS DE EFECTOS VISUALES Y OVERLAYS ============== -->
     <canvas id="fireworks-canvas"></canvas>
     <div id="backdrop"></div>
-    <div id="winner-overlay">
-        <div>
-            <h2 id="winner-name"></h2>
-            <p id="winner-title">¡CAMPEÓN!</p>
-        </div>
+
+    <!-- NEW: Watermarks -->
+    <div class="watermark-container">
+        <img id="andromeda-watermark" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png" alt="Andromeda Ventures Watermark">
+        <img id="nestle-watermark" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png" alt="Nestlé Watermark">
     </div>
 
-    <!-- ============== CABECERA DE LA PÁGINA ============== -->
-    <header class="text-center my-8">
+    <!-- NEW: Champion Screen -->
+    <div id="champion-overlay" onclick="this.classList.remove('visible')">
+        <p class="champion-title">¡CAMPEÓN!</p>
+        <h2 id="champion-name-display" class="champion-name"></h2>
+    </div>
+
+    <header class="text-center mb-8">
         <div class="logo-container">
-             <img id="logo-andromeda" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png" alt="Andromeda Ventures Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Andromeda';">
+             <img src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png" alt="Andromeda Ventures Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Andromeda';">
              <span class="vs">VS</span>
-             <img id="logo-nestle" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png" alt="Nestlé Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Nestlé';">
+             <img src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png" alt="Nestlé Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Nestlé';">
         </div>
+        <h1 class="text-4xl sm:text-6xl font-black tracking-wider uppercase">Torneo de Ping Pong</h1>
     </header>
 
-    <!-- ============== TÍTULO PRINCIPAL DEL TORNEO ============== -->
-    <div class="text-center mb-12">
-        <h1 class="main-title text-5xl sm:text-6xl font-black tracking-wider uppercase">EL PRIMER ENFRENTAMIENTO</h1>
+    <div class="text-center mb-8 flex justify-center gap-4">
+        <button id="reset-tournament-btn" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105">Reiniciar Torneo</button>
+        <button id="clear-data-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105">Borrar Datos Guardados</button>
     </div>
 
-    <!-- ============== CONTENEDOR PRINCIPAL DEL BRACKET (LLAVES) ============== -->
     <div class="bracket-container" id="bracket-container">
         <svg id="connector-svg"></svg>
         <div class="bracket" id="bracket">
-            
-            <!-- === ALA IZQUIERDA DEL BRACKET === -->
-            <div class="bracket-wing left">
-                <!-- Ronda 1 (Izquierda) -->
-                <div class="round">
-                    <div class="match" data-match-id="1" data-next-match="9" data-next-player-slot="1" onclick="focusMatch(event)"><div class="player"><span class="player-name" ondblclick="editName(this)">Alejandra G. - Ricardo P.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(1, 1, -1)">-</button><span class="player-score" id="score-1-1">0</span><button onclick="event.stopPropagation(); changeScore(1, 1, 1)">+</button></div></div><div class="player"><span class="player-name" ondblclick="editName(this)">Justin J. - Kender P.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(1, 2, -1)">-</button><span class="player-score" id="score-1-2">0</span><button onclick="event.stopPropagation(); changeScore(1, 2, 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(1, event)" disabled>Ganador</button></div>
-                    <div class="match" data-match-id="2" data-next-match="9" data-next-player-slot="2" onclick="focusMatch(event)"><div class="player"><span class="player-name" ondblclick="editName(this)">Cecilia B. - Valeria O.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(2, 3, -1)">-</button><span class="player-score" id="score-2-3">0</span><button onclick="event.stopPropagation(); changeScore(2, 3, 1)">+</button></div></div><div class="player"><span class="player-name" ondblclick="editName(this)">Feliciano G. - Pedro C.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(2, 4, -1)">-</button><span class="player-score" id="score-2-4">0</span><button onclick="event.stopPropagation(); changeScore(2, 4, 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(2, event)" disabled>Ganador</button></div>
-                    <div class="match" data-match-id="3" data-next-match="10" data-next-player-slot="1" onclick="focusMatch(event)"><div class="player"><span class="player-name" ondblclick="editName(this)">Gisanny M. - Mariam M.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(3, 5, -1)">-</button><span class="player-score" id="score-3-5">0</span><button onclick="event.stopPropagation(); changeScore(3, 5, 1)">+</button></div></div><div class="player"><span class="player-name" ondblclick="editName(this)">Vanesa C. - Iván L.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(3, 6, -1)">-</button><span class="player-score" id="score-3-6">0</span><button onclick="event.stopPropagation(); changeScore(3, 6, 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(3, event)" disabled>Ganador</button></div>
-                    <div class="match" data-match-id="4" data-next-match="10" data-next-player-slot="2" onclick="focusMatch(event)"><div class="player"><span class="player-name" ondblclick="editName(this)">Andrés D. - Vicente O.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(4, 7, -1)">-</button><span class="player-score" id="score-4-7">0</span><button onclick="event.stopPropagation(); changeScore(4, 7, 1)">+</button></div></div><div class="player"><span class="player-name" ondblclick="editName(this)">Lui H. - Jesús G.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(4, 8, -1)">-</button><span class="player-score" id="score-4-8">0</span><button onclick="event.stopPropagation(); changeScore(4, 8, 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(4, event)" disabled>Ganador</button></div>
+            <!-- The rest of the HTML for the bracket remains the same -->
+            <!-- Ronda 1 (Izquierda) -->
+            <div class="round">
+                <div class="match" data-match-id="1" data-next-match="9" data-next-player-slot="1" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Alejandra G. - Ricardo P.</span><div class="score-controls"><button onclick="changeScore(1, 1, -1)">-</button><span class="player-score" id="score-1-1">0</span><button onclick="changeScore(1, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Justin J. - Kender P.</span><div class="score-controls"><button onclick="changeScore(1, 2, -1)">-</button><span class="player-score" id="score-1-2">0</span><button onclick="changeScore(1, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(1, event)" disabled>Declarar Ganador</button>
                 </div>
-                <!-- Cuartos de Final (Izquierda) -->
-                <div class="round">
-                    <div class="match" data-match-id="9" data-next-match="13" data-next-player-slot="1" onclick="focusMatch(event)"><div class="player" data-player-id="9-1"><span class="player-name" ondblclick="editName(this)">Ganador M1</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(9, '9-1', -1)">-</button><span class="player-score" id="score-9-9-1">0</span><button onclick="event.stopPropagation(); changeScore(9, '9-1', 1)">+</button></div></div><div class="player" data-player-id="9-2"><span class="player-name" ondblclick="editName(this)">Ganador M2</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(9, '9-2', -1)">-</button><span class="player-score" id="score-9-9-2">0</span><button onclick="event.stopPropagation(); changeScore(9, '9-2', 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(9, event)" disabled>Ganador</button></div>
-                    <div class="match" data-match-id="10" data-next-match="13" data-next-player-slot="2" onclick="focusMatch(event)"><div class="player" data-player-id="10-1"><span class="player-name" ondblclick="editName(this)">Ganador M3</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(10, '10-1', -1)">-</button><span class="player-score" id="score-10-10-1">0</span><button onclick="event.stopPropagation(); changeScore(10, '10-1', 1)">+</button></div></div><div class="player" data-player-id="10-2"><span class="player-name" ondblclick="editName(this)">Ganador M4</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(10, '10-2', -1)">-</button><span class="player-score" id="score-10-10-2">0</span><button onclick="event.stopPropagation(); changeScore(10, '10-2', 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(10, event)" disabled>Ganador</button></div>
+                <div class="match" data-match-id="2" data-next-match="9" data-next-player-slot="2" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Cecilia B. - Valeria O.</span><div class="score-controls"><button onclick="changeScore(2, 1, -1)">-</button><span class="player-score" id="score-2-1">0</span><button onclick="changeScore(2, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Feliciano G. - Pedro C.</span><div class="score-controls"><button onclick="changeScore(2, 2, -1)">-</button><span class="player-score" id="score-2-2">0</span><button onclick="changeScore(2, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(2, event)" disabled>Declarar Ganador</button>
                 </div>
-                <!-- Semifinal (Izquierda) -->
-                <div class="round">
-                    <div class="match" data-match-id="13" data-next-match="15" data-next-player-slot="1" data-loser-to="16" data-loser-slot="1" onclick="focusMatch(event)"><div class="player" data-player-id="13-1"><span class="player-name" ondblclick="editName(this)">Ganador QF1</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(13, '13-1', -1)">-</button><span class="player-score" id="score-13-13-1">0</span><button onclick="event.stopPropagation(); changeScore(13, '13-1', 1)">+</button></div></div><div class="player" data-player-id="13-2"><span class="player-name" ondblclick="editName(this)">Ganador QF2</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(13, '13-2', -1)">-</button><span class="player-score" id="score-13-13-2">0</span><button onclick="event.stopPropagation(); changeScore(13, '13-2', 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(13, event)" disabled>Ganador</button></div>
+                <div class="match" data-match-id="3" data-next-match="10" data-next-player-slot="1" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Gisanny M. - Mariam M.</span><div class="score-controls"><button onclick="changeScore(3, 1, -1)">-</button><span class="player-score" id="score-3-1">0</span><button onclick="changeScore(3, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Vanesa C. - Iván L.</span><div class="score-controls"><button onclick="changeScore(3, 2, -1)">-</button><span class="player-score" id="score-3-2">0</span><button onclick="changeScore(3, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(3, event)" disabled>Declarar Ganador</button>
+                </div>
+                <div class="match" data-match-id="4" data-next-match="10" data-next-player-slot="2" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Andrés D. - Vicente O.</span><div class="score-controls"><button onclick="changeScore(4, 1, -1)">-</button><span class="player-score" id="score-4-1">0</span><button onclick="changeScore(4, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Lui H. - Jesús G.</span><div class="score-controls"><button onclick="changeScore(4, 2, -1)">-</button><span class="player-score" id="score-4-2">0</span><button onclick="changeScore(4, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(4, event)" disabled>Declarar Ganador</button>
                 </div>
             </div>
-
-            <!-- === RONDA FINAL (CENTRO) === -->
+            <!-- Cuartos de Final (Izquierda) -->
+            <div class="round">
+                <div class="match" data-match-id="9" data-next-match="13" data-next-player-slot="1" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M1</span><div class="score-controls"><button onclick="changeScore(9, 1, -1)">-</button><span class="player-score" id="score-9-1">0</span><button onclick="changeScore(9, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M2</span><div class="score-controls"><button onclick="changeScore(9, 2, -1)">-</button><span class="player-score" id="score-9-2">0</span><button onclick="changeScore(9, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(9, event)" disabled>Declarar Ganador</button>
+                </div>
+                <div class="match" data-match-id="10" data-next-match="13" data-next-player-slot="2" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M3</span><div class="score-controls"><button onclick="changeScore(10, 1, -1)">-</button><span class="player-score" id="score-10-1">0</span><button onclick="changeScore(10, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M4</span><div class="score-controls"><button onclick="changeScore(10, 2, -1)">-</button><span class="player-score" id="score-10-2">0</span><button onclick="changeScore(10, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(10, event)" disabled>Declarar Ganador</button>
+                </div>
+            </div>
+            <!-- Semifinal (Izquierda) -->
+            <div class="round">
+                <div class="match" data-match-id="13" data-next-match="15" data-next-player-slot="1" data-loser-to="16" data-loser-slot="1" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador QF1</span><div class="score-controls"><button onclick="changeScore(13, 1, -1)">-</button><span class="player-score" id="score-13-1">0</span><button onclick="changeScore(13, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador QF2</span><div class="score-controls"><button onclick="changeScore(13, 2, -1)">-</button><span class="player-score" id="score-13-2">0</span><button onclick="changeScore(13, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(13, event)" disabled>Declarar Ganador</button>
+                </div>
+            </div>
+            <!-- Final y 3er Lugar -->
             <div class="round round-final">
-                <div class="match" data-match-id="15" onclick="focusMatch(event)"><h3 class="text-2xl font-bold text-center mb-4 text-yellow-400 uppercase">Gran Final</h3><div class="player" data-player-id="15-1"><span class="player-name" ondblclick="editName(this)">Ganador SF1</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(15, '15-1', -1)">-</button><span class="player-score" id="score-15-15-1">0</span><button onclick="event.stopPropagation(); changeScore(15, '15-1', 1)">+</button></div></div><div class="player" data-player-id="15-2"><span class="player-name" ondblclick="editName(this)">Ganador SF2</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(15, '15-2', -1)">-</button><span class="player-score" id="score-15-15-2">0</span><button onclick="event.stopPropagation(); changeScore(15, '15-2', 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(15, event)" disabled>Declarar Campeón</button></div>
-                <div class="match" data-match-id="16" onclick="focusMatch(event)"><h3 class="text-xl font-bold text-center mb-2 text-orange-400 uppercase">Tercer Lugar</h3><div class="player" data-player-id="16-1"><span class="player-name" ondblclick="editName(this)">Perdedor SF1</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(16, '16-1', -1)">-</button><span class="player-score" id="score-16-16-1">0</span><button onclick="event.stopPropagation(); changeScore(16, '16-1', 1)">+</button></div></div><div class="player" data-player-id="16-2"><span class="player-name" ondblclick="editName(this)">Perdedor SF2</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(16, '16-2', -1)">-</button><span class="player-score" id="score-16-16-2">0</span><button onclick="event.stopPropagation(); changeScore(16, '16-2', 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(16, event)" disabled>Declarar 3er Lugar</button></div>
-            </div>
-            
-            <!-- === ALA DERECHA DEL BRACKET (SIMÉTRICA) === -->
-            <div class="bracket-wing right">
-                 <!-- CORRECCIÓN DE SIMETRÍA: El orden de las rondas ahora es inverso al del ala izquierda para que visualmente se vea simétrico -->
-                <!-- Ronda 1 (Derecha) -->
-                <div class="round">
-                    <div class="match" data-match-id="5" data-next-match="11" data-next-player-slot="1" onclick="focusMatch(event)"><div class="player"><span class="player-name" ondblclick="editName(this)">Angel B. - Samuel D.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(5, 9, -1)">-</button><span class="player-score" id="score-5-9">0</span><button onclick="event.stopPropagation(); changeScore(5, 9, 1)">+</button></div></div><div class="player"><span class="player-name" ondblclick="editName(this)">Alexis R. - Arturo B.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(5, 10, -1)">-</button><span class="player-score" id="score-5-10">0</span><button onclick="event.stopPropagation(); changeScore(5, 10, 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(5, event)" disabled>Ganador</button></div>
-                    <div class="match" data-match-id="6" data-next-match="11" data-next-player-slot="2" onclick="focusMatch(event)"><div class="player"><span class="player-name" ondblclick="editName(this)">Verónica S. - Enrique J.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(6, 11, -1)">-</button><span class="player-score" id="score-6-11">0</span><button onclick="event.stopPropagation(); changeScore(6, 11, 1)">+</button></div></div><div class="player"><span class="player-name" ondblclick="editName(this)">Ruben L. - Ricardo F.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(6, 12, -1)">-</button><span class="player-score" id="score-6-12">0</span><button onclick="event.stopPropagation(); changeScore(6, 12, 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(6, event)" disabled>Ganador</button></div>
-                    <div class="match" data-match-id="7" data-next-match="12" data-next-player-slot="1" onclick="focusMatch(event)"><div class="player"><span class="player-name" ondblclick="editName(this)">Katiuska R. - Miguel P.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(7, 13, -1)">-</button><span class="player-score" id="score-7-13">0</span><button onclick="event.stopPropagation(); changeScore(7, 13, 1)">+</button></div></div><div class="player"><span class="player-name" ondblclick="editName(this)">Alejandro M. - Ricardo C.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(7, 14, -1)">-</button><span class="player-score" id="score-7-14">0</span><button onclick="event.stopPropagation(); changeScore(7, 14, 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(7, event)" disabled>Ganador</button></div>
-                    <div class="match" data-match-id="8" data-next-match="12" data-next-player-slot="2" onclick="focusMatch(event)"><div class="player"><span class="player-name" ondblclick="editName(this)">Isabella R. - Anthony M.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(8, 15, -1)">-</button><span class="player-score" id="score-8-15">0</span><button onclick="event.stopPropagation(); changeScore(8, 15, 1)">+</button></div></div><div class="player"><span class="player-name" ondblclick="editName(this)">Gabriel C. - José P.</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(8, 16, -1)">-</button><span class="player-score" id="score-8-16">0</span><button onclick="event.stopPropagation(); changeScore(8, 16, 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(8, event)" disabled>Ganador</button></div>
+                <div class="match" data-match-id="15" onclick="focusMatch(event)">
+                    <h3 class="text-2xl font-bold text-center mb-4 text-yellow-400 uppercase">Gran Final</h3>
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador SF1</span><div class="score-controls"><button onclick="changeScore(15, 1, -1)">-</button><span class="player-score" id="score-15-1">0</span><button onclick="changeScore(15, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador SF2</span><div class="score-controls"><button onclick="changeScore(15, 2, -1)">-</button><span class="player-score" id="score-15-2">0</span><button onclick="changeScore(15, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(15, event)" disabled>Declarar Campeón</button>
                 </div>
-                <!-- Cuartos de Final (Derecha) -->
-                <div class="round">
-                    <div class="match" data-match-id="11" data-next-match="14" data-next-player-slot="1" onclick="focusMatch(event)"><div class="player" data-player-id="11-1"><span class="player-name" ondblclick="editName(this)">Ganador M5</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(11, '11-1', -1)">-</button><span class="player-score" id="score-11-11-1">0</span><button onclick="event.stopPropagation(); changeScore(11, '11-1', 1)">+</button></div></div><div class="player" data-player-id="11-2"><span class="player-name" ondblclick="editName(this)">Ganador M6</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(11, '11-2', -1)">-</button><span class="player-score" id="score-11-11-2">0</span><button onclick="event.stopPropagation(); changeScore(11, '11-2', 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(11, event)" disabled>Ganador</button></div>
-                    <div class="match" data-match-id="12" data-next-match="14" data-next-player-slot="2" onclick="focusMatch(event)"><div class="player" data-player-id="12-1"><span class="player-name" ondblclick="editName(this)">Ganador M7</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(12, '12-1', -1)">-</button><span class="player-score" id="score-12-12-1">0</span><button onclick="event.stopPropagation(); changeScore(12, '12-1', 1)">+</button></div></div><div class="player" data-player-id="12-2"><span class="player-name" ondblclick="editName(this)">Ganador M8</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(12, '12-2', -1)">-</button><span class="player-score" id="score-12-12-2">0</span><button onclick="event.stopPropagation(); changeScore(12, '12-2', 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(12, event)" disabled>Ganador</button></div>
-                </div>
-                <!-- Semifinal (Derecha) -->
-                <div class="round">
-                    <div class="match" data-match-id="14" data-next-match="15" data-next-player-slot="2" data-loser-to="16" data-loser-slot="2" onclick="focusMatch(event)"><div class="player" data-player-id="14-1"><span class="player-name" ondblclick="editName(this)">Ganador QF3</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(14, '14-1', -1)">-</button><span class="player-score" id="score-14-14-1">0</span><button onclick="event.stopPropagation(); changeScore(14, '14-1', 1)">+</button></div></div><div class="player" data-player-id="14-2"><span class="player-name" ondblclick="editName(this)">Ganador QF4</span><div class="score-controls"><button onclick="event.stopPropagation(); changeScore(14, '14-2', -1)">-</button><span class="player-score" id="score-14-14-2">0</span><button onclick="event.stopPropagation(); changeScore(14, '14-2', 1)">+</button></div></div><button class="winner-button" onclick="event.stopPropagation(); declareWinner(14, event)" disabled>Ganador</button></div>
+                <div class="match" data-match-id="16" onclick="focusMatch(event)">
+                    <h3 class="text-xl font-bold text-center mb-2 text-orange-400 uppercase">Tercer Lugar</h3>
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Perdedor SF1</span><div class="score-controls"><button onclick="changeScore(16, 1, -1)">-</button><span class="player-score" id="score-16-1">0</span><button onclick="changeScore(16, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Perdedor SF2</span><div class="score-controls"><button onclick="changeScore(16, 2, -1)">-</button><span class="player-score" id="score-16-2">0</span><button onclick="changeScore(16, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(16, event)" disabled>Declarar 3er Lugar</button>
                 </div>
             </div>
-
+            <!-- Semifinal (Derecha) -->
+            <div class="round">
+                <div class="match" data-match-id="14" data-next-match="15" data-next-player-slot="2" data-loser-to="16" data-loser-slot="2" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador QF3</span><div class="score-controls"><button onclick="changeScore(14, 1, -1)">-</button><span class="player-score" id="score-14-1">0</span><button onclick="changeScore(14, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador QF4</span><div class="score-controls"><button onclick="changeScore(14, 2, -1)">-</button><span class="player-score" id="score-14-2">0</span><button onclick="changeScore(14, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(14, event)" disabled>Declarar Ganador</button>
+                </div>
+            </div>
+            <!-- Cuartos de Final (Derecha) -->
+            <div class="round">
+                <div class="match" data-match-id="11" data-next-match="14" data-next-player-slot="1" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M5</span><div class="score-controls"><button onclick="changeScore(11, 1, -1)">-</button><span class="player-score" id="score-11-1">0</span><button onclick="changeScore(11, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M6</span><div class="score-controls"><button onclick="changeScore(11, 2, -1)">-</button><span class="player-score" id="score-11-2">0</span><button onclick="changeScore(11, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(11, event)" disabled>Declarar Ganador</button>
+                </div>
+                <div class="match" data-match-id="12" data-next-match="14" data-next-player-slot="2" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Ganador M7</span><div class="score-controls"><button onclick="changeScore(12, 1, -1)">-</button><span class="player-score" id="score-12-1">0</span><button onclick="changeScore(12, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ganador M8</span><div class="score-controls"><button onclick="changeScore(12, 2, -1)">-</button><span class="player-score" id="score-12-2">0</span><button onclick="changeScore(12, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(12, event)" disabled>Declarar Ganador</button>
+                </div>
+            </div>
+            <!-- Ronda 1 (Derecha) -->
+            <div class="round">
+                <div class="match" data-match-id="5" data-next-match="11" data-next-player-slot="1" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Angel B. - Samuel D.</span><div class="score-controls"><button onclick="changeScore(5, 1, -1)">-</button><span class="player-score" id="score-5-1">0</span><button onclick="changeScore(5, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Alexis R. - Arturo B.</span><div class="score-controls"><button onclick="changeScore(5, 2, -1)">-</button><span class="player-score" id="score-5-2">0</span><button onclick="changeScore(5, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(5, event)" disabled>Declarar Ganador</button>
+                </div>
+                <div class="match" data-match-id="6" data-next-match="11" data-next-player-slot="2" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Verónica S. - Enrique J.</span><div class="score-controls"><button onclick="changeScore(6, 1, -1)">-</button><span class="player-score" id="score-6-1">0</span><button onclick="changeScore(6, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Ruben L. - Ricardo F.</span><div class="score-controls"><button onclick="changeScore(6, 2, -1)">-</button><span class="player-score" id="score-6-2">0</span><button onclick="changeScore(6, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(6, event)" disabled>Declarar Ganador</button>
+                </div>
+                <div class="match" data-match-id="7" data-next-match="12" data-next-player-slot="1" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Katiuska R. - Miguel P.</span><div class="score-controls"><button onclick="changeScore(7, 1, -1)">-</button><span class="player-score" id="score-7-1">0</span><button onclick="changeScore(7, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Alejandro M. - Ricardo C.</span><div class="score-controls"><button onclick="changeScore(7, 2, -1)">-</button><span class="player-score" id="score-7-2">0</span><button onclick="changeScore(7, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(7, event)" disabled>Declarar Ganador</button>
+                </div>
+                <div class="match" data-match-id="8" data-next-match="12" data-next-player-slot="2" onclick="focusMatch(event)">
+                    <div class="player" data-player-index="1"><span class="player-name" ondblclick="editName(this)">Isabella R. - Anthony M.</span><div class="score-controls"><button onclick="changeScore(8, 1, -1)">-</button><span class="player-score" id="score-8-1">0</span><button onclick="changeScore(8, 1, 1)">+</button></div></div>
+                    <div class="player" data-player-index="2"><span class="player-name" ondblclick="editName(this)">Gabriel C. - José P.</span><div class="score-controls"><button onclick="changeScore(8, 2, -1)">-</button><span class="player-score" id="score-8-2">0</span><button onclick="changeScore(8, 2, 1)">+</button></div></div>
+                    <button class="winner-button" onclick="declareWinner(8, event)" disabled>Declarar Ganador</button>
+                </div>
+            </div>
         </div>
     </div>
-
-    <!-- Contenedor para mostrar el resumen final del torneo -->
-    <div id="summary-container" class="bracket-container"></div>
     
     <script>
-        // ============== VARIABLES Y CONSTANTES GLOBALES ==============
         const WINNING_SCORE = 11;
+        const STORAGE_KEY = 'pingPongTournamentState_v2';
         const backdrop = document.getElementById('backdrop');
-        let completedMatches = []; // Almacena los resultados de los partidos jugados
-        const initialBracketHTML = document.getElementById('bracket').innerHTML; // Guarda el estado inicial para el resumen
+        const synth = new Tone.Synth().toDestination();
+        let audioStarted = false;
 
-        // ============== SÍNTESIS DE SONIDO (con Tone.js) ==============
-        let soundsReady = false;
-        const scoreSynth = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination();
-        const winSynth = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.2, sustain: 0.5, release: 1 } }).toDestination();
-        
-        // El audio en navegadores requiere una interacción del usuario para iniciarse.
-        document.body.addEventListener('click', () => {
-            if (!soundsReady) {
-                Tone.start();
-                soundsReady = true;
-            }
-        }, { once: true });
-
-        // Función para reproducir sonidos
-        function playSound(type) {
-            if (!soundsReady) return;
-            if (type === 'score') {
-                scoreSynth.triggerAttackRelease("C5", "8n");
-            } else if (type === 'win') {
-                winSynth.triggerAttackRelease("G4", "4n");
-                setTimeout(() => winSynth.triggerAttackRelease("C5", "4n"), 150);
-            }
-        }
-
-        // ============== FUNCIONES DE INTERACCIÓN DEL USUARIO ==============
-
-        // Permite editar un nombre al hacer doble clic
+        // --- NAME EDITING ---
         function editName(element) {
             element.setAttribute('contenteditable', 'true');
             element.focus();
-            // Seleccionar todo el texto para facilitar la edición
-            const range = document.createRange();
-            range.selectNodeContents(element);
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
+            document.execCommand('selectAll', false, null);
 
-            // Guardar al presionar Enter
             element.onkeydown = (event) => {
                 if (event.key === 'Enter') {
                     event.preventDefault();
                     element.blur();
                 }
             };
-            // Guardar al hacer clic fuera
             element.onblur = () => {
                 element.setAttribute('contenteditable', 'false');
+                saveState();
             };
         }
 
-        // Enfoca y agranda un partido al hacer clic en él
+        // --- FOCUS MODE ---
         function focusMatch(event) {
+            if (event.target.tagName === 'BUTTON' || event.target.closest('.score-controls') || event.target.isContentEditable) {
+                event.stopPropagation();
+                return;
+            }
             const matchElement = event.currentTarget;
             if (matchElement.classList.contains('is-focus-mode')) return;
             unfocusAllMatches();
@@ -399,62 +399,58 @@
             backdrop.classList.add('active');
         }
 
-        // Quita el enfoque de todos los partidos
         function unfocusAllMatches() {
             document.querySelectorAll('.is-focus-mode').forEach(el => el.classList.remove('is-focus-mode'));
             backdrop.classList.remove('active');
         }
-        
         backdrop.addEventListener('click', unfocusAllMatches);
 
-        // ============== LÓGICA PRINCIPAL DEL TORNEO ==============
+        // --- SCORING LOGIC ---
+        async function changeScore(matchId, playerIndex, delta) {
+            if (!audioStarted) {
+                await Tone.start();
+                audioStarted = true;
+                console.log('Audio context started');
+            }
 
-        // Cambia la puntuación de un jugador
-        function changeScore(matchId, playerId, delta) {
-            playSound('score');
-            const scoreElement = document.getElementById(`score-${matchId}-${playerId}`);
+            const scoreElement = document.getElementById(`score-${matchId}-${playerIndex}`);
             let newScore = parseInt(scoreElement.textContent) + delta;
-            if (newScore >= 0) scoreElement.textContent = newScore;
+            if (newScore >= 0) {
+                scoreElement.textContent = newScore;
+                if (delta > 0) {
+                    synth.triggerAttackRelease("G5", "32n");
+                }
+            }
             checkWinnerCondition(matchId);
+            saveState();
         }
 
-        // Verifica si un jugador ha ganado el partido
         function checkWinnerCondition(matchId) {
             const matchElement = document.querySelector(`[data-match-id='${matchId}']`);
-            const players = matchElement.querySelectorAll('.player');
-            const scores = Array.from(players).map(p => parseInt(p.querySelector('.player-score').textContent));
+            if (matchElement.classList.contains('match-completed')) return;
+
+            const scores = Array.from(matchElement.querySelectorAll('.player-score')).map(s => parseInt(s.textContent));
             const winnerButton = matchElement.querySelector('.winner-button');
             const [p1Score, p2Score] = scores;
             
-            let hasWinner = (p1Score >= WINNING_SCORE && p1Score >= p2Score + 2) || (p2Score >= WINNING_SCORE && p2Score >= p1Score + 2);
+            const hasWinner = (p1Score >= WINNING_SCORE && p1Score >= p2Score + 2) || (p2Score >= WINNING_SCORE && p2Score >= p1Score + 2);
             winnerButton.disabled = !hasWinner;
         }
 
-        // Declara un ganador y avanza al siguiente
+        // --- WINNER DECLARATION ---
         function declareWinner(matchId, event) {
-            playSound('win');
+            event.stopPropagation();
             const matchElement = document.querySelector(`[data-match-id='${matchId}']`);
             if (matchElement.classList.contains('match-completed')) return;
 
             const players = matchElement.querySelectorAll('.player');
             const scores = Array.from(players).map(p => parseInt(p.querySelector('.player-score').textContent));
             
-            const winner = scores[0] > scores[1] ? players[0] : players[1];
-            const loser = scores[0] > scores[1] ? players[1] : players[0];
+            const winnerIndex = scores[0] > scores[1] ? 0 : 1;
+            const winner = players[winnerIndex];
+            const loser = players[1 - winnerIndex];
             const winnerNameEl = winner.querySelector('.player-name');
 
-            // Guarda los datos del partido para el resumen final
-            const matchData = {
-                id: matchId,
-                players: Array.from(players).map((p, index) => ({
-                    name: p.querySelector('.player-name').textContent,
-                    score: scores[index],
-                    isWinner: p === winner
-                }))
-            };
-            completedMatches.push(matchData);
-
-            // Aplica estilos de ganador/perdedor
             winner.classList.add('bg-green-600/30', 'font-bold');
             winnerNameEl.classList.add('winner-highlight');
             loser.classList.add('bg-red-600/30', 'opacity-60');
@@ -463,102 +459,128 @@
             matchElement.querySelectorAll('button').forEach(btn => btn.disabled = true);
             matchElement.querySelector('.winner-button').textContent = "Finalizado";
 
+            const isFinal = matchElement.dataset.matchId === '15';
             const rect = winnerNameEl.getBoundingClientRect();
-            launchFireworks(rect.left + rect.width / 2, rect.top + rect.height / 2, 1);
+            launchFireworks(rect.left + rect.width / 2, rect.top + rect.height / 2, isFinal);
+
+            if (isFinal) {
+                document.getElementById('champion-name-display').textContent = winnerNameEl.textContent;
+                setTimeout(() => {
+                    document.getElementById('champion-overlay').classList.add('visible');
+                }, 1000);
+            }
 
             const { nextMatch, nextPlayerSlot, loserTo, loserSlot } = matchElement.dataset;
 
-            // Avanza al ganador a la siguiente ronda
             if (nextMatch && nextPlayerSlot) {
-                const nextPlayerElement = document.querySelector(`[data-match-id='${nextMatch}'] [data-player-id='${nextMatch}-${nextPlayerSlot}'] .player-name`);
+                const nextPlayerElement = document.querySelector(`[data-match-id='${nextMatch}'] [data-player-index='${nextPlayerSlot}'] .player-name`);
                 if (nextPlayerElement) nextPlayerElement.textContent = winnerNameEl.textContent;
             }
             
-            // Envía al perdedor al partido por el 3er lugar (si aplica)
-            if(loserTo && loserSlot) {
-                 const thirdPlaceMatch = document.querySelector(`[data-match-id='${loserTo}']`);
-                 const thirdPlaceSlot = thirdPlaceMatch.querySelector(`[data-player-id='${loserTo}-${loserSlot}'] .player-name`);
-                 if(thirdPlaceSlot) {
-                     thirdPlaceSlot.textContent = loser.querySelector('.player-name').textContent;
-                 }
+            if (loserTo && loserSlot) {
+                const thirdPlaceSlot = document.querySelector(`[data-match-id='${loserTo}'] [data-player-index='${loserSlot}'] .player-name`);
+                if (thirdPlaceSlot) thirdPlaceSlot.textContent = loser.querySelector('.player-name').textContent;
             }
             
-            setTimeout(drawConnectors, 300);
-
-            // Si es la final, inicia la secuencia de victoria
-            if (matchId == 15) {
-                showGrandFinale(winnerNameEl.textContent);
-            }
-        }
-
-        // ============== SECUENCIA FINAL Y RESUMEN ==============
-
-        // Muestra la pantalla de ganador
-        function showGrandFinale(winnerName) {
-            const overlay = document.getElementById('winner-overlay');
-            document.getElementById('winner-name').textContent = winnerName;
-            overlay.classList.add('active');
-            
-            // Lanza fuegos artificiales más intensos
-            for(let i = 0; i < 5; i++){
-                setTimeout(() => {
-                    const x = Math.random() * window.innerWidth;
-                    const y = Math.random() * window.innerHeight / 2;
-                    launchFireworks(x, y, 2);
-                }, i * 500);
-            }
-
-            // Después de 5 segundos, muestra el resumen
             setTimeout(() => {
-                overlay.classList.remove('active');
-                showFinalSummary();
-            }, 5000);
+                drawConnectors();
+                saveState();
+            }, 300);
         }
 
-        // Muestra el resumen de todas las llaves
-        function showFinalSummary() {
-            const bracketContainer = document.getElementById('bracket-container');
-            const summaryContainer = document.getElementById('summary-container');
-            
-            bracketContainer.style.opacity = '0';
-            summaryContainer.style.display = 'flex';
-            
-            const summaryBracket = document.createElement('div');
-            summaryBracket.className = 'bracket';
-            summaryBracket.innerHTML = initialBracketHTML;
-            summaryContainer.appendChild(summaryBracket);
-
-            // Rellena el bracket de resumen con los datos guardados
-            summaryBracket.querySelectorAll('.match').forEach(match => {
+        // --- DATA PERSISTENCE ---
+        function saveState() {
+            const state = {
+                matches: {}
+            };
+            document.querySelectorAll('.match').forEach(match => {
                 const matchId = match.dataset.matchId;
-                const matchData = completedMatches.find(m => m.id == matchId);
+                const players = [];
+                match.querySelectorAll('.player').forEach(player => {
+                    players.push({
+                        name: player.querySelector('.player-name').textContent,
+                        score: player.querySelector('.player-score').textContent
+                    });
+                });
+                state.matches[matchId] = {
+                    players: players,
+                    isCompleted: match.classList.contains('match-completed')
+                };
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
 
-                if (matchData) {
-                    const playerElements = match.querySelectorAll('.player');
-                    playerElements.forEach((playerEl, index) => {
-                        const nameEl = playerEl.querySelector('.player-name');
-                        const scoreEl = playerEl.querySelector('.player-score');
-                        nameEl.textContent = matchData.players[index].name;
-                        scoreEl.textContent = matchData.players[index].score;
-                        if (matchData.players[index].isWinner) {
-                            nameEl.classList.add('winner');
+        function loadState() {
+            const savedState = localStorage.getItem(STORAGE_KEY);
+            if (!savedState) return;
+            const state = JSON.parse(savedState);
+
+            for (const matchId in state.matches) {
+                const matchData = state.matches[matchId];
+                const matchElement = document.querySelector(`[data-match-id='${matchId}']`);
+                if (matchElement) {
+                    const playerElements = matchElement.querySelectorAll('.player');
+                    matchData.players.forEach((playerData, index) => {
+                        if (playerElements[index]) {
+                            playerElements[index].querySelector('.player-name').textContent = playerData.name;
+                            playerElements[index].querySelector('.player-score').textContent = playerData.score;
                         }
                     });
-                    match.classList.add('summary-match', 'match-completed');
-                    match.querySelectorAll('button, .score-controls').forEach(el => el.remove());
-                } else {
-                    match.style.opacity = '0.2';
+
+                    if (matchData.isCompleted) {
+                        const scores = matchData.players.map(p => parseInt(p.score));
+                        const winnerIndex = scores[0] > scores[1] ? 0 : 1;
+                        playerElements[winnerIndex].classList.add('bg-green-600/30', 'font-bold');
+                        playerElements[winnerIndex].querySelector('.player-name').classList.add('winner-highlight');
+                        playerElements[1 - winnerIndex].classList.add('bg-red-600/30', 'opacity-60');
+                        matchElement.classList.add('match-completed');
+                        matchElement.querySelectorAll('button').forEach(btn => btn.disabled = true);
+                        matchElement.querySelector('.winner-button').textContent = "Finalizado";
+                    }
+                    checkWinnerCondition(matchId);
                 }
-            });
-            
-            setTimeout(() => {
-                bracketContainer.style.display = 'none';
-                summaryContainer.style.opacity = '1';
-                drawConnectors();
-            }, 500);
+            }
         }
 
-        // ============== ANIMACIÓN DE FUEGOS ARTIFICIALES ==============
+        // --- TOURNAMENT CONTROLS ---
+        const placeholderNames = {
+            '9': ['Ganador M1', 'Ganador M2'], '10': ['Ganador M3', 'Ganador M4'],
+            '11': ['Ganador M5', 'Ganador M6'], '12': ['Ganador M7', 'Ganador M8'],
+            '13': ['Ganador QF1', 'Ganador QF2'], '14': ['Ganador QF3', 'Ganador QF4'],
+            '15': ['Ganador SF1', 'Ganador SF2'], '16': ['Perdedor SF1', 'Perdedor SF2'],
+        };
+
+        document.getElementById('reset-tournament-btn').addEventListener('click', () => {
+             if (confirm('¿Estás seguro de que quieres reiniciar el torneo? Se reiniciarán todos los puntajes y el progreso, pero se conservarán los nombres de la primera ronda.')) {
+                const currentState = JSON.parse(localStorage.getItem(STORAGE_KEY));
+                if (!currentState) {
+                    location.reload();
+                    return;
+                }
+
+                for (const matchId in currentState.matches) {
+                    const matchData = currentState.matches[matchId];
+                    matchData.players.forEach(p => p.score = '0');
+                    matchData.isCompleted = false;
+                    
+                    if (placeholderNames[matchId]) {
+                        matchData.players[0].name = placeholderNames[matchId][0];
+                        matchData.players[1].name = placeholderNames[matchId][1];
+                    }
+                }
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
+                location.reload();
+            }
+        });
+
+        document.getElementById('clear-data-btn').addEventListener('click', () => {
+             if (confirm('¿Estás seguro de que quieres borrar TODOS los datos guardados? Esto incluye los nombres de los jugadores editados.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        });
+
+        // --- FIREWORKS ---
         const canvas = document.getElementById('fireworks-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -570,17 +592,18 @@
         }
         
         class Particle {
-            constructor(x, y, color, scale) {
-                this.x = x; this.y = y; this.color = color;
-                this.size = (Math.random() * 2 + 1) * scale; this.alpha = 1;
+            constructor(x, y, color, isBig) {
+                this.x = x; this.y = y; this.color = color; this.isBig = isBig; // FIX: Store isBig property
+                this.size = Math.random() * (this.isBig ? 3 : 2) + 1; this.alpha = 1;
                 this.angle = Math.random() * Math.PI * 2;
-                this.speed = Math.random() * (5 * scale) + 1; this.gravity = 0.1 * scale;
+                this.speed = Math.random() * (this.isBig ? 8 : 5) + 1; this.gravity = 0.1;
                 this.vx = Math.cos(this.angle) * this.speed;
                 this.vy = Math.sin(this.angle) * this.speed;
             }
             update() {
                 this.x += this.vx; this.y += this.vy;
-                this.vy += this.gravity; this.alpha -= 0.02;
+                this.vy += this.gravity;
+                this.alpha -= this.isBig ? 0.015 : 0.02; // FIX: Use this.isBig
             }
             draw() {
                 ctx.globalAlpha = this.alpha; ctx.fillStyle = this.color;
@@ -588,11 +611,11 @@
             }
         }
 
-        function createExplosion(x, y, scale) {
-            const particleCount = 100 * scale;
-            const colors = ['#FFC700', '#FF0000', '#FFFFFF', '#00FFC3'];
+        function createExplosion(x, y, isBig) {
+            const particleCount = isBig ? 300 : 100;
+            const colors = ['#FFC700', '#f59e0b', '#FFFFFF', '#10b981'];
             for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], scale));
+                particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], isBig));
             }
         }
         
@@ -606,18 +629,19 @@
             animationFrameId = requestAnimationFrame(animateFireworks);
             if (particles.length === 0) {
                 cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
         }
 
-        function launchFireworks(x, y, scale = 1) {
-            if (particles.length === 0) {
-                animateFireworks();
-            }
-            createExplosion(x, y, scale);
+        function launchFireworks(x, y, isBig = false) {
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            particles = [];
+            createExplosion(x, y, isBig);
+            animateFireworks();
         }
 
-        // ============== DIBUJO DE LÍNEAS CONECTORAS (LLAVES) ==============
+        // --- SVG CONNECTORS ---
         const svg = document.getElementById('connector-svg');
         const bracketContainer = document.getElementById('bracket-container');
         const bracket = document.getElementById('bracket');
@@ -633,40 +657,43 @@
 
                 const startRect = match.getBoundingClientRect();
                 const endRect = nextMatch.getBoundingClientRect();
-                
-                const isRightWing = match.closest('.bracket-wing.right');
 
-                const startX = (isRightWing ? startRect.left : startRect.right) - containerRect.left + bracketContainer.scrollLeft;
+                const startX = startRect.right - containerRect.left + bracketContainer.scrollLeft;
                 const startY = startRect.top + startRect.height / 2 - containerRect.top;
                 
-                const endX = (isRightWing ? endRect.right : endRect.left) - containerRect.left + bracketContainer.scrollLeft;
+                const endX = endRect.left - containerRect.left + bracketContainer.scrollLeft;
                 const endY = endRect.top + endRect.height / 2 - containerRect.top;
 
                 const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                const horizontalLineLength = 48;
-                const midX = isRightWing ? startX - horizontalLineLength : startX + horizontalLineLength;
+                const midX = startX + 40;
                 const d = `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`;
                 
                 path.setAttribute('d', d);
-                path.setAttribute('stroke', '#9CA3AF');
-                path.setAttribute('stroke-width', '3');
+                path.setAttribute('stroke', '#6b7280');
+                path.setAttribute('stroke-width', '2');
                 path.setAttribute('fill', 'none');
+                path.classList.add('connector-path');
+
+                if (match.classList.contains('match-completed')) {
+                    path.classList.add('winner-path');
+                }
                 svg.appendChild(path);
             });
             svg.setAttribute('width', bracket.scrollWidth);
             svg.setAttribute('height', bracket.scrollHeight);
         }
-
-        // ============== EVENT LISTENERS (Carga y Redimensión) ==============
+        
+        // --- INITIALIZATION ---
         window.addEventListener('load', () => {
-             drawConnectors();
-             resizeCanvas();
+            loadState();
+            drawConnectors();
+            resizeCanvas();
+            bracketContainer.scrollLeft = (bracketContainer.scrollWidth - bracketContainer.clientWidth) / 2;
         });
         window.addEventListener('resize', () => {
             drawConnectors();
             resizeCanvas();
         });
-
     </script>
 </body>
 </html>

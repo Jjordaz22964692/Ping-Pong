@@ -40,9 +40,6 @@
             flex-direction: row;
             align-items: center;
         }
-        .bracket-wing.right {
-            flex-direction: row-reverse;
-        }
         .round {
             display: flex;
             flex-direction: column;
@@ -171,6 +168,11 @@
             font-weight: bold;
             color: #10b981;
         }
+        @media (max-width: 1600px) {
+            .bracket {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8">
@@ -186,7 +188,7 @@
 
     <header class="text-center my-8">
         <div class="logo-container">
-             <img src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%andromeda%ventures-01" alt="Andromeda Ventures Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Andromeda';">
+             <img src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png" alt="Andromeda Ventures Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Andromeda';">
              <span class="vs">VS</span>
              <img src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png" alt="Nestlé Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Nestlé';">
         </div>
@@ -196,7 +198,7 @@
     <div class="bracket-container" id="bracket-container">
         <svg id="connector-svg"></svg>
         <div class="bracket" id="bracket">
-            <!-- Bracket structure remains the same -->
+            
             <div class="bracket-wing left">
                 <div class="round">
                     <div class="match" data-match-id="1" data-next-match="9" data-next-player-slot="1" onclick="focusMatch(event)"><div class="player"><span class="player-name" ondblclick="editName(this)">Alejandra G. - Ricardo P.</span><div class="score-controls"><button onclick="changeScore(1, 1, -1)">-</button><span class="player-score" id="score-1-1">0</span><button onclick="changeScore(1, 1, 1)">+</button></div></div><div class="player"><span class="player-name" ondblclick="editName(this)">Justin J. - Kender P.</span><div class="score-controls"><button onclick="changeScore(1, 2, -1)">-</button><span class="player-score" id="score-1-2">0</span><button onclick="changeScore(1, 2, 1)">+</button></div></div><button class="winner-button" onclick="declareWinner(1, event)" disabled>Ganador</button></div>
@@ -212,10 +214,12 @@
                     <div class="match" data-match-id="13" data-next-match="15" data-next-player-slot="1" data-loser-to="16" data-loser-slot="1" onclick="focusMatch(event)"><div class="player" data-player-id="13-1"><span class="player-name" ondblclick="editName(this)">Ganador QF1</span><div class="score-controls"><button onclick="changeScore(13, '13-1', -1)">-</button><span class="player-score" id="score-13-13-1">0</span><button onclick="changeScore(13, '13-1', 1)">+</button></div></div><div class="player" data-player-id="13-2"><span class="player-name" ondblclick="editName(this)">Ganador QF2</span><div class="score-controls"><button onclick="changeScore(13, '13-2', -1)">-</button><span class="player-score" id="score-13-13-2">0</span><button onclick="changeScore(13, '13-2', 1)">+</button></div></div><button class="winner-button" onclick="declareWinner(13, event)" disabled>Ganador</button></div>
                 </div>
             </div>
+
             <div class="round round-final">
                 <div class="match" data-match-id="15" onclick="focusMatch(event)"><h3 class="text-2xl font-bold text-center mb-4 text-yellow-400 uppercase">Gran Final</h3><div class="player" data-player-id="15-1"><span class="player-name" ondblclick="editName(this)">Ganador SF1</span><div class="score-controls"><button onclick="changeScore(15, '15-1', -1)">-</button><span class="player-score" id="score-15-15-1">0</span><button onclick="changeScore(15, '15-1', 1)">+</button></div></div><div class="player" data-player-id="15-2"><span class="player-name" ondblclick="editName(this)">Ganador SF2</span><div class="score-controls"><button onclick="changeScore(15, '15-2', -1)">-</button><span class="player-score" id="score-15-15-2">0</span><button onclick="changeScore(15, '15-2', 1)">+</button></div></div><button class="winner-button" onclick="declareWinner(15, event)" disabled>Declarar Campeón</button></div>
                 <div class="match" data-match-id="16" onclick="focusMatch(event)"><h3 class="text-xl font-bold text-center mb-2 text-orange-400 uppercase">Tercer Lugar</h3><div class="player" data-player-id="16-1"><span class="player-name" ondblclick="editName(this)">Perdedor SF1</span><div class="score-controls"><button onclick="changeScore(16, '16-1', -1)">-</button><span class="player-score" id="score-16-16-1">0</span><button onclick="changeScore(16, '16-1', 1)">+</button></div></div><div class="player" data-player-id="16-2"><span class="player-name" ondblclick="editName(this)">Perdedor SF2</span><div class="score-controls"><button onclick="changeScore(16, '16-2', -1)">-</button><span class="player-score" id="score-16-16-2">0</span><button onclick="changeScore(16, '16-2', 1)">+</button></div></div><button class="winner-button" onclick="declareWinner(16, event)" disabled>Declarar 3er Lugar</button></div>
             </div>
+            
             <div class="bracket-wing right">
                 <div class="round">
                     <div class="match" data-match-id="14" data-next-match="15" data-next-player-slot="2" data-loser-to="16" data-loser-slot="2" onclick="focusMatch(event)"><div class="player" data-player-id="14-1"><span class="player-name" ondblclick="editName(this)">Ganador QF3</span><div class="score-controls"><button onclick="changeScore(14, '14-1', -1)">-</button><span class="player-score" id="score-14-14-1">0</span><button onclick="changeScore(14, '14-1', 1)">+</button></div></div><div class="player" data-player-id="14-2"><span class="player-name" ondblclick="editName(this)">Ganador QF4</span><div class="score-controls"><button onclick="changeScore(14, '14-2', -1)">-</button><span class="player-score" id="score-14-14-2">0</span><button onclick="changeScore(14, '14-2', 1)">+</button></div></div><button class="winner-button" onclick="declareWinner(14, event)" disabled>Ganador</button></div>
@@ -532,4 +536,3 @@
     </script>
 </body>
 </html>
-

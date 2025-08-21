@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marcador Torneo de Ping Pong</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -27,25 +28,54 @@
             display: flex;
             justify-content: center;
             padding: 2rem;
-            overflow-x: auto;
+            overflow: hidden;
             transition: opacity 0.5s ease-out;
+        }
+        .bracket-container::before, .bracket-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.05;
+            z-index: 0;
+            transform: translateY(-50%);
+        }
+        .bracket-container::before { /* Andromeda Watermark */
+            background-image: url('https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png');
+            left: 5%;
+            background-position: left center;
+            width: 60%; 
+            height: 100%;
+        }
+        .bracket-container::after { /* Nestlé Watermark */
+            background-image: url('https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png');
+            right: 5%;
+            background-position: right center;
+            width: 40%;
+            height: 80%;
         }
         .bracket {
             display: flex;
             flex-direction: row;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
         .bracket-wing {
             display: flex;
             flex-direction: row;
             align-items: center;
         }
+        .bracket-wing.right {
+            flex-direction: row-reverse;
+        }
         .round {
             display: flex;
             flex-direction: column;
             justify-content: space-around;
             flex-grow: 1;
-            min-width: 260px; /* Optimizado para 2K */
+            min-width: 260px;
             padding: 0 2.5rem;
         }
         .round-final { min-width: 340px; }
@@ -61,10 +91,6 @@
             backdrop-filter: blur(10px);
             cursor: pointer;
             width: 100%;
-        }
-        .match.disappearing {
-            transform: scale(0);
-            opacity: 0;
         }
         .match-completed { border-color: #4b5563; }
         .match.is-focus-mode {
@@ -113,12 +139,30 @@
         .winner-button:disabled { background: #4b5563; cursor: not-allowed; transform: none; box-shadow: none; }
         .logo-container {
             display: flex; justify-content: center; align-items: center;
-            gap: 4rem; margin-bottom: 2rem;
+            gap: 4rem; margin-bottom: 1rem;
         }
         .logo-container img {
-            height: 135px; /* 90px * 1.5 */
-            width: auto; object-fit: contain;
-            max-width: 375px; filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+            width: auto;
+            max-width: 300px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+        }
+        #logo-andromeda {
+            height: 135px; /* Reverted to balanced size */
+        }
+        #logo-nestle {
+            height: 120px;
+        }
+        .main-title {
+            animation: title-enter 1s ease-out forwards, title-pulse 2s ease-in-out 1s infinite alternate;
+        }
+        @keyframes title-enter {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes title-pulse {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #14b8a6, 0 0 40px #14b8a6; }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #14b8a6, 0 0 50px #14b8a6; }
         }
         .vs { font-family: 'Orbitron', sans-serif; font-size: 4rem; font-weight: 900; color: #d1d5db; text-shadow: 3px 3px 5px rgba(0,0,0,0.5); }
         #backdrop, #winner-overlay {
@@ -153,7 +197,7 @@
             color: #f59e0b;
         }
         #summary-container {
-            display: none; /* Inicia oculto */
+            display: none;
             opacity: 0;
             transition: opacity 0.5s ease-in;
         }
@@ -188,12 +232,15 @@
 
     <header class="text-center my-8">
         <div class="logo-container">
-             <img src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png" alt="Andromeda Ventures Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Andromeda';">
+             <img id="logo-andromeda" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png" alt="Andromeda Ventures Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Andromeda';">
              <span class="vs">VS</span>
-             <img src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png" alt="Nestlé Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Nestlé';">
+             <img id="logo-nestle" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png" alt="Nestlé Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Nestlé';">
         </div>
-        <h1 class="text-5xl sm:text-6xl font-black tracking-wider uppercase">Torneo de Ping Pong</h1>
     </header>
+
+    <div class="text-center mb-12">
+        <h1 class="main-title text-5xl sm:text-6xl font-black tracking-wider uppercase">EL PRIMER ENFRENTAMIENTO</h1>
+    </div>
 
     <div class="bracket-container" id="bracket-container">
         <svg id="connector-svg"></svg>
@@ -247,6 +294,29 @@
         let completedMatches = [];
         const initialBracketHTML = document.getElementById('bracket').innerHTML;
 
+        // --- Sound Synthesis ---
+        let soundsReady = false;
+        const scoreSynth = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination();
+        const winSynth = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.2, sustain: 0.5, release: 1 } }).toDestination();
+        
+        // Enable sounds on first user interaction
+        document.body.addEventListener('click', () => {
+            if (!soundsReady) {
+                Tone.start();
+                soundsReady = true;
+            }
+        }, { once: true });
+
+        function playSound(type) {
+            if (!soundsReady) return;
+            if (type === 'score') {
+                scoreSynth.triggerAttackRelease("C5", "8n");
+            } else if (type === 'win') {
+                winSynth.triggerAttackRelease("G4", "4n");
+                setTimeout(() => winSynth.triggerAttackRelease("C5", "4n"), 150);
+            }
+        }
+
         function editName(element) {
             element.setAttribute('contenteditable', 'true');
             element.focus();
@@ -287,6 +357,7 @@
         backdrop.addEventListener('click', unfocusAllMatches);
 
         function changeScore(matchId, playerId, delta) {
+            playSound('score');
             const scoreElement = document.getElementById(`score-${matchId}-${playerId}`);
             let newScore = parseInt(scoreElement.textContent) + delta;
             if (newScore >= 0) scoreElement.textContent = newScore;
@@ -305,6 +376,7 @@
         }
 
         function declareWinner(matchId, event) {
+            playSound('win');
             const matchElement = document.querySelector(`[data-match-id='${matchId}']`);
             if (matchElement.classList.contains('match-completed')) return;
 
@@ -315,7 +387,6 @@
             const loser = scores[0] > scores[1] ? players[1] : players[0];
             const winnerNameEl = winner.querySelector('.player-name');
 
-            // Capturar datos antes de modificar
             const matchData = {
                 id: matchId,
                 players: Array.from(players).map((p, index) => ({
@@ -352,14 +423,9 @@
                  }
             }
             
-            setTimeout(() => {
-                if (matchId != 15 && matchId != 16) { // No desaparecer la final
-                    matchElement.classList.add('disappearing');
-                }
-                drawConnectors();
-            }, 500);
+            setTimeout(drawConnectors, 300);
 
-            if (matchId == 15) { // Es la final
+            if (matchId == 15) {
                 showGrandFinale(winnerNameEl.textContent);
             }
         }
@@ -369,7 +435,6 @@
             document.getElementById('winner-name').textContent = winnerName;
             overlay.classList.add('active');
             
-            // Fuegos artificiales intensos
             for(let i = 0; i < 5; i++){
                 setTimeout(() => {
                     const x = Math.random() * window.innerWidth;
@@ -381,7 +446,7 @@
             setTimeout(() => {
                 overlay.classList.remove('active');
                 showFinalSummary();
-            }, 5000); // Mostrar por 5 segundos
+            }, 5000);
         }
 
         function showFinalSummary() {
@@ -396,7 +461,6 @@
             summaryBracket.innerHTML = initialBracketHTML;
             summaryContainer.appendChild(summaryBracket);
 
-            // Limpiar y poblar con datos guardados
             summaryBracket.querySelectorAll('.match').forEach(match => {
                 const matchId = match.dataset.matchId;
                 const matchData = completedMatches.find(m => m.id == matchId);
@@ -415,7 +479,6 @@
                     match.classList.add('summary-match', 'match-completed');
                     match.querySelectorAll('button, .score-controls').forEach(el => el.remove());
                 } else {
-                    // Ocultar partidos no jugados en el resumen
                     match.style.opacity = '0.2';
                 }
             });
@@ -423,7 +486,7 @@
             setTimeout(() => {
                 bracketContainer.style.display = 'none';
                 summaryContainer.style.opacity = '1';
-                drawConnectors(); // Redibujar las llaves para el resumen
+                drawConnectors();
             }, 500);
         }
 
@@ -479,7 +542,7 @@
         }
 
         function launchFireworks(x, y, scale = 1) {
-            if (particles.length === 0) { // Inicia la animación solo si no está corriendo
+            if (particles.length === 0) {
                 animateFireworks();
             }
             createExplosion(x, y, scale);

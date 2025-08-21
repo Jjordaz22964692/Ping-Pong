@@ -26,7 +26,7 @@
         .bracket-container {
             position: relative;
             display: flex;
-            justify-content: flex-start; /* Changed for scroll centering */
+            justify-content: flex-start; 
             padding: 2rem;
             overflow-x: auto;
         }
@@ -39,11 +39,14 @@
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            flex-grow: 1;
-            min-width: 300px;
+            flex-grow: 0; /* Changed for symmetry */
+            flex-shrink: 0; /* Changed for symmetry */
+            width: 300px; /* Changed for symmetry */
             padding: 0 2rem;
         }
-        .round-final { min-width: 350px; }
+        .round-final { 
+            width: 350px; /* Changed for symmetry */
+        }
         .match {
             background-color: rgba(31, 41, 55, 0.85);
             border-radius: 0.75rem;
@@ -112,12 +115,14 @@
             gap: 2.5rem; margin-bottom: 1rem;
         }
         .logo-container img {
-            height: 60px;
             width: auto;
             object-fit: contain;
-            max-width: 200px;
             filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
         }
+        /* MODIFIED: Header Logo Sizes */
+        #nestle-logo-header { height: 100px; }
+        #andromeda-logo-header { height: 150px; }
+
         .vs { font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; color: #d1d5db; text-shadow: 3px 3px 5px rgba(0,0,0,0.5); }
         #backdrop {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -145,7 +150,7 @@
             transition: all 0.5s ease-in-out;
         }
         
-        /* NEW: Watermark Styles */
+        /* MODIFIED: Watermark Styles */
         .watermark-container {
             position: fixed;
             top: 0;
@@ -158,14 +163,14 @@
             gap: 10vw;
             z-index: -1;
             pointer-events: none;
-            opacity: 0.05;
+            opacity: 0.1; /* Increased Opacity */
         }
         .watermark-container img {
             object-fit: contain;
-            max-width: 40vw;
+            max-width: 50vw;
         }
-        #andromeda-watermark { height: 45vh; }
-        #nestle-watermark { height: 30vh; }
+        #andromeda-watermark { height: 75vh; } /* Increased Size */
+        #nestle-watermark { height: 50vh; } /* Increased Size */
 
         /* NEW: Champion Announcement Styles */
         #champion-overlay {
@@ -212,11 +217,14 @@
 
         /* 2K Screen Optimizations */
         @media (min-width: 2560px) {
-            .round { min-width: 380px; padding: 0 3rem; }
+            .round { width: 380px; padding: 0 3rem; }
+            .round-final { width: 450px; }
             .match { margin: 3.5rem 0; }
             h1 { font-size: 5rem; }
             .player-name { font-size: 1.2rem; }
             .player-score { font-size: 2rem; }
+            #nestle-logo-header { height: 125px; }
+            #andromeda-logo-header { height: 187.5px; }
         }
     </style>
 </head>
@@ -239,11 +247,11 @@
 
     <header class="text-center mb-8">
         <div class="logo-container">
-             <img src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png" alt="Andromeda Ventures Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Andromeda';">
+             <img id="andromeda-logo-header" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/Logo%20andromeda%20ventures-01.png" alt="Andromeda Ventures Logo" onerror="this.onerror=null;this.src='https://placehold.co/225x150/0f293b/FFFFFF?text=Andromeda';">
              <span class="vs">VS</span>
-             <img src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png" alt="Nestlé Logo" onerror="this.onerror=null;this.src='https://placehold.co/200x70/0f293b/FFFFFF?text=Nestlé';">
+             <img id="nestle-logo-header" src="https://raw.githubusercontent.com/Jjordaz22964692/Ping-Pong/main/imagenes/pngwing.com.png" alt="Nestlé Logo" onerror="this.onerror=null;this.src='https://placehold.co/150x100/0f293b/FFFFFF?text=Nestlé';">
         </div>
-        <h1 class="text-4xl sm:text-6xl font-black tracking-wider uppercase">Torneo de Ping Pong</h1>
+        <h1 class="text-4xl sm:text-6xl font-black tracking-wider uppercase mt-6">Torneo de Ping Pong</h1>
     </header>
 
     <div class="text-center mb-8 flex justify-center gap-4">
